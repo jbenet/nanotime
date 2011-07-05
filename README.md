@@ -15,15 +15,15 @@ good old Unix timestamp was perfect except for the lack of precision. Finding no
 better alternative, I decided to make my own to fit my needs: a uint64 count of nanoseconds since the unix epoch.
 
 ### What about `timespec` and `timeval`?
-While timevals and timespecs add the much needed precision (usec and nsec), they
-do so in a cumbersome way. They store the extra precision in a second uint32
-rather than in one whole field. While this preserves quick access to the seconds
-part of the time value, adding and subtracting timespecs and timevals is not as
-simple as integer operations. For most of my use cases, I found myself
-comparing, adding, subtracting time values much more than outputting them.
-Furthermore, I tend to require the sub-second precision when printing out,
-storing, transferring, or doing anything that would have once been satisfied by
-the second field.
+While `timevals` and `timespecs` add the much needed precision (`usec` and
+`nsec`), they do so in a cumbersome way. They store the extra precision in
+a second `uint32` rather than in one whole field. While this preserves quick
+access to the `sec` part of the time value, adding and subtracting `timespecs`
+and `timevals` is not as simple as integer operations. For most of my use cases,
+I found myself comparing, adding, subtracting time values much more than
+outputting them. Furthermore, I tend to require the sub-second precision when
+printing out, storing, and transferring (or anything else the `sec` field used
+to satisfy) anyway.
 
 ### What about ISO? It's perfectly portable and searchable!
 And slow and heavy. Sometimes you want a lighter and faster type, for quick
