@@ -3,7 +3,10 @@
 ### nanosecond precision time
 
 The nanotime module provides a time object that keeps time as the number of
-nanoseconds since the UNIX epoch. In other words, it is a UNIX timestamp with nanosecond precision.
+nanoseconds since the UNIX epoch. In other words, it is a 64bit UNIX timestamp
+with nanosecond precision.
+
+[https://github.com/jbenet/nanotime](https://github.com/jbenet/nanotime)
 
 ## Install
 
@@ -35,3 +38,10 @@ conversions:
     >>> import time
     >>> nanotime.timestamp(time.time())
     nanotime.nanotime(1309849172822870016)
+
+## Tests
+
+There is one basic test file so far. Run with:
+
+    nosetests
+
