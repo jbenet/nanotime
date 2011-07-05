@@ -29,8 +29,9 @@ to satisfy) anyway.
 And slow and heavy. Sometimes you want a lighter and faster type, for quick
 comparisons of lots of data (entry bookkeeping, packet timestamping).
 
-### What about [http://msdn.microsoft.com/en-us/library/system.datetime.aspx](MS DateTime)?
-While DateTime does store the...entire number in one field, they chose to count
+### What about MS DateTime?
+While [http://msdn.microsoft.com/en-us/library/system.datetime.aspx](DateTime)
+does store the...entire number in one field, they chose to count
 the odd measure of 100-nanosecond intervals (dubbed `ticks`, not to be confused
 with processor ticks). If this weren't enough, MS DateTime also starts off from
 the year 0000 AD, since they could never bear to use the Unix Epoch. While I'm
