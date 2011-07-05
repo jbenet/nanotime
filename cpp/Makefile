@@ -21,9 +21,13 @@ check: test
 
 test: $(RUN_TESTS)
 
-test_%: test/test_%.cpp
-	$(CXX) $(CFLAGS) -o $@ $^ $(INCFLAGS)
+test_%: build test/test_%.cpp
+	$(CXX) $(CFLAGS) -o build/$@ $^ $(INCFLAGS)
 
 run_% : %
 	@echo '==============> running $<'
 	@./$< > /dev/null
+
+
+build:
+	@mkdir build

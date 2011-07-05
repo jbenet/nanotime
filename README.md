@@ -49,8 +49,9 @@ Then again, it may be best to use a range of 292 around 1970. If I find the need
 
 There are currently implementations in:
 
- * C  -- struct nanotime
- * C++  -- nanotime::Time
+ * C       -- struct nanotime
+ * C++     -- nanotime::Time
+ * Obj-C   -- nanotime (C) and NSDate category
  * Python  -- nanotime
 
 included in this source.

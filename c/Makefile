@@ -22,9 +22,12 @@ check: test
 
 test: $(RUN_TESTS)
 
-test_%: test/test_%.c
+test_%: build test/test_%.c
 	$(CC) $(CFLAGS) -o build/$@ $^ $(SRCS) $(INCFLAGS)
 
 run_% : %
 	@echo '==============> running $<'
 	@build/$< > /dev/null
+
+build:
+	@mkdir build
