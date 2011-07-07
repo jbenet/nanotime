@@ -11,7 +11,8 @@ static const char *kINDENT = "-----> ";
 static int errors = 0;
 
 #define DOT cout << "."
-#define massert(cond, msg) if (!(cond)) cout << "Error " << ++errors << " [" << __FILE__ << ":" << __LINE__ << "]: " << msg << endl;
+#define massert(cond, msg) if (!(cond)) cout << "Error " << ++errors \
+  << " [" << __FILE__ << ":" << __LINE__ << "]: " << msg << endl;
 
 
 void testCreationTime(uint32_t sec, uint32_t usec, string isoString) {
@@ -37,7 +38,7 @@ void testCreationTime(uint32_t sec, uint32_t usec, string isoString) {
   Time t6 = Time::nsec(useci * 1000);
 
   massert(t1.usec() == useci, "times should be equal. " << useci << t1.usec());
-  // massert(t2.usec() == useci, "times should be equal. " << useci << t2.usec());
+// massert(t2.usec() == useci, "times should be equal. " << useci << t2.usec());
   massert(t3.usec() == useci, "times should be equal. " << useci << t3.usec());
   massert(t4.usec() == useci, "times should be equal. " << useci << t4.usec());
   massert(t5.usec() == useci, "times should be equal. " << useci << t5.usec());
@@ -49,8 +50,9 @@ void testCreationTime(uint32_t sec, uint32_t usec, string isoString) {
   massert(t1 == t5, "times should be equal. " << t1 << " == " << t5);
   massert(t1 == t6, "times should be equal. " << t1 << " == " << t6);
 
-  massert(t1.isoString() == isoString, "iso strings should be equal" << t1.isoString() << " == " << isoString);
-  // massert(t2.isoString() == isoString, "iso strings should be equal");
+  massert(t1.isoString() == isoString, "iso strings should be equal"
+    << t1.isoString() << " == " << isoString);
+// massert(t2.isoString() == isoString, "iso strings should be equal");
   massert(t3.isoString() == isoString, "iso strings should be equal");
   massert(t4.isoString() == isoString, "iso strings should be equal");
   massert(t5.isoString() == isoString, "iso strings should be equal");

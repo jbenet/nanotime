@@ -17,7 +17,8 @@ Nanotime is under the MIT License.
 This Obj-C implementation is based on the C implementaion, with the addition of
 a category on NSDate.
 
-Place nanotime.h, nanotime.c, NSDate+nanotime.h, NSDate+nanotime.m along with your other sources. This implementation uses a typedefs nanotime.
+Place nanotime.h, nanotime.c, NSDate+nanotime.h, NSDate+nanotime.m along with
+your other sources. This implementation uses a typedefs nanotime.
 
 
     > nanotime ntime = nanotime_now();
