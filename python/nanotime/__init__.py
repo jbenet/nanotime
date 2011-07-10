@@ -2,7 +2,7 @@ import time
 import datetime as datetime_module
 
 __author__ = 'jbenet@cs.stanford.edu'
-__version__ = '0.5'
+__version__ = '0.5.1'
 
 
 __doc__ = '''
