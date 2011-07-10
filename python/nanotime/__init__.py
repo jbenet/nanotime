@@ -87,7 +87,7 @@ class nanotime(object):
     if isinstance(other, self.__class__):
       return cmp(self._ns, other._ns)
     else:
-      return cmp(self._ns, converter.convert(other))
+      return cmp(self._ns, _converter.convert(other)._ns)
 
   def __hash__(self):
     return hash(self._ns)
@@ -154,11 +154,11 @@ class _converter(object):
   @classmethod
   def convert(cls, other):
     if isinstance(other, datetime_module.datetime):
-      return self.datetime(other)
+      return cls.datetime(other)
     elif isinstance(other, float):
-      return self.timestamp(other)
+      return cls.timestamp(other)
     elif isinstance(other, int):
-      return self.nanoseconds(other)
+      return cls.nanoseconds(other)
     else:
       raise TypeError('Cannot convert %s into %s' % (type(other), nanotime))
 

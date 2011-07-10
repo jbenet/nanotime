@@ -9,6 +9,7 @@ class TestTime(unittest.TestCase):
   def test_construction(self):
 
     def eq(time1, time2):
+      self.assertEqual(time1, time2)
       self.assertEqual(time1._ns, time2._ns)
       self.assertEqual(time1.nanoseconds(), time2.nanoseconds())
       self.assertEqual(time1.microseconds(), time2.microseconds())
@@ -20,6 +21,16 @@ class TestTime(unittest.TestCase):
       self.assertEqual(time1.timestamp(), time2.timestamp())
       self.assertEqual(time1.datetime(), time2.datetime())
       self.assertEqual(time1.unixtime(), time2.unixtime())
+
+      self.assertEqual(time1, time1.unixtime())
+      self.assertEqual(time1, time2.unixtime())
+      self.assertEqual(time1, time1.timestamp())
+      self.assertEqual(time1, time2.timestamp())
+
+      self.assertEqual(time2, time1.unixtime())
+      self.assertEqual(time2, time2.unixtime())
+      self.assertEqual(time2, time1.timestamp())
+      self.assertEqual(time2, time2.timestamp())
 
     def close(x, y, epsilon=1e-6):
         return abs(x - y) < epsilon
@@ -41,13 +52,17 @@ class TestTime(unittest.TestCase):
       ts1 = time.time()
       ts2 = nanotime.timestamp(ts1).timestamp()
       eq(nanotime.timestamp(ts1), nanotime.timestamp(ts1))
-      self.assertTrue(abs(ts2 - ts1) < 10e-6)
+      self.assertTrue(close(ts2, ts1))
+      self.assertEqual(nanotime.timestamp(ts1), ts1)
 
       # datetime
       dt1 = datetime.datetime.now()
       dt2 = nanotime.datetime(dt1).datetime()
       eq(nanotime.datetime(dt1), nanotime.datetime(dt1))
-      self.assertTrue(abs(dt1 - dt2) < datetime.timedelta(microseconds=1))
+      self.assertTrue(close(dt1, dt2, datetime.timedelta(microseconds=1)))
+      # self.assertTrue(cmp(dt1, dt2) == cmp(nanotime.datetime(dt1), dt1))
+      # FIXME(jbenet)
+      # cmp() raises: TypeError: can't compare datetime.datetime to nanotime
 
   def __subtest_arithmetic(self, start, extra):
     eq = self.assertEqual
