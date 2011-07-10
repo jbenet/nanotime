@@ -9,7 +9,7 @@ import nanotime
 setup(
   name="nanotime",
   version=nanotime.__version__,
-  description="Nanotime python implementation <http://dronestore.org/>",
+  description="nanotime python implementation",
   author="Juan Batiz-Benet",
   author_email="jbenet@cs.stanford.com",
   url="http://github.com/jbenet/nanotime/tree/master/python",
