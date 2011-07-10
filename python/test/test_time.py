@@ -10,6 +10,9 @@ class TestTime(unittest.TestCase):
 
     def eq(time1, time2):
       self.assertEqual(time1, time2)
+      self.assertEqual(int(time1), time2._ns)
+      self.assertEqual(time1._ns, int(time1))
+      self.assertEqual(time1._ns, int(time2))
       self.assertEqual(time1._ns, time2._ns)
       self.assertEqual(time1.nanoseconds(), time2.nanoseconds())
       self.assertEqual(time1.microseconds(), time2.microseconds())

@@ -62,6 +62,9 @@ class nanotime(object):
 
   #----------------------------------------------------
 
+  def __int__(self):
+    return self._ns
+
   def __str__(self):
     return '%s%s' % (self.datetime(), str(self._ns)[-3:])
 
