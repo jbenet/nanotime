@@ -160,7 +160,7 @@ class _converter(object):
       return cls.datetime(other)
     elif isinstance(other, float):
       return cls.timestamp(other)
-    elif isinstance(other, int):
+    elif isinstance(other, int) or isinstance(other, long):
       return cls.nanoseconds(other)
     else:
       raise TypeError('Cannot convert %s into %s' % (type(other), nanotime))
