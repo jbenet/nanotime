@@ -33,6 +33,17 @@ struct nanotime nanotime_from_timespec(const struct timespec *ts);
 /* fast access to current time */
 struct nanotime nanotime_now();
 
+/* fast access to UTC nanotime. must remember to call  */
+struct nanotime nanotime_utc_now();
+struct nanotime nanotime_utc_from_local(const struct nanotime *nt);
+struct nanotime nanotime_local_from_utc(const struct nanotime *nt);
+
+/* in order to account for hosts potentially setting INCORRECT timezones */
+/* the nanotime interface exposes setting nanotime_utc_offset            */
+void nanotime_utc_offset_is(const int64_t offset);
+int64_t nanotime_utc_offset();
+int64_t host_utc_sec_offset();
+
 
 /* fill buffer `buf` with up to `len` chars of the iso representation of `nt` */
 /* returns how many chars were printed into the buffer.                       */
@@ -40,4 +51,4 @@ struct nanotime nanotime_now();
 size_t nanotime_iso(const struct nanotime *nt, char *buf, const size_t len);
 
 
-#endif // __NANOTIME_C_H__
+#endif /* __NANOTIME_C_H__ */

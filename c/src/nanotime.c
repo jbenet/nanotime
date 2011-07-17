@@ -1,11 +1,18 @@
-#include <time.h>
 #include <string.h>
 #include <stdio.h>
 #include "nanotime.h"
 
+#ifdef __MACH__
+#include <mach/clock.h>
+#include <mach/mach.h>
+#endif
+
+
 #define kT_ns_in_s  (uint64_t)1000000000
 #define kT_ns_in_us (uint64_t)1000
+#define kT_ns_in_day (int64_t)86400000000000
 
+static int64_t utc_nanosecond_offset = (int64_t)kT_ns_in_day; /* sentinel */
 
 
 uint64_t nanotime_sec(const struct nanotime *nt) {
@@ -80,18 +87,71 @@ struct nanotime nanotime_from_timespec(const struct timespec *ts) {
 
 
 
+/* NOTE: the following juggling between UTC and local times is necessary */
+/* in order to account for hosts potentially setting INCORRECT timezones */
+/* for this, the nanotime interface exposes setting nanotime_utc_offset  */
 
 struct nanotime nanotime_now() {
-#ifndef __LINUX__
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  return nanotime_from_timeval(&tv);
-#else
   struct timespec ts;
+
+#ifdef __MACH__ // OS X does not have clock_gettime, use clock_get_time
+  clock_serv_t cclock;
+  mach_timespec_t mts;
+  host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+  clock_get_time(cclock, &mts);
+  mach_port_deallocate(mach_task_self(), cclock);
+  ts.tv_sec = mts.tv_sec;
+  ts.tv_nsec = mts.tv_nsec;
+#else
   clock_gettime(CLOCK_REALTIME, &ts);
-  return nanotime_from_timespec(&ts);
 #endif
+
+  ts.tv_sec += host_utc_sec_offset();
+  return nanotime_from_timespec(&ts);
 }
+
+
+
+
+
+/* fast access to UTC nanotime. must remember to call  */
+struct nanotime nanotime_utc_now() {
+  struct nanotime nt = nanotime_now();
+  return nanotime_utc_from_local(&nt);
+}
+
+
+struct nanotime nanotime_utc_from_local(const struct nanotime *nt) {
+  return nanotime_from_nsec(nt->ns - nanotime_utc_offset());
+}
+
+struct nanotime nanotime_local_from_utc(const struct nanotime *nt) {
+  return nanotime_from_nsec(nt->ns + nanotime_utc_offset());
+}
+
+
+
+
+
+int64_t host_utc_sec_offset() {
+  time_t secs = (time_t)time(NULL);
+  struct tm tm_;
+  localtime_r(&secs, &tm_);
+  return tm_.tm_gmtoff;
+}
+
+int64_t nanotime_utc_offset() {
+  if (utc_nanosecond_offset >= kT_ns_in_day) { // sentinel
+    nanotime_utc_offset_is(host_utc_sec_offset() * kT_ns_in_s);
+  }
+  return utc_nanosecond_offset;
+}
+
+
+void nanotime_utc_offset_is(const int64_t offset) {
+  utc_nanosecond_offset = offset;
+}
+
 
 
 
@@ -108,12 +168,16 @@ size_t nanotime_iso(const struct nanotime *nt, char *buf, const size_t len) {
   size_t offset = strftime(buf, len, "%Y-%m-%d %H:%M:%S", &tm_);
 
   if (offset + 7 <= len) {
-    sprintf(buf + offset, ".%llu", (nt->ns % kT_ns_in_s) / kT_ns_in_us);
+    sprintf(buf + offset, ".%llu",
+      (long long unsigned)(nt->ns % kT_ns_in_s) / kT_ns_in_us);
     offset += 7;
   }
   return offset;
 }
 
 
+
+
 #undef kT_ns_in_s
 #undef kT_ns_in_us
+#undef kT_ns_in_day

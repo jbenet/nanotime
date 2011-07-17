@@ -1,16 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "nanotime.h"
 
 static const char *kINDENT = "-----> ";
 static int errors = 0;
 
+
 #define DOT printf(".")
 #define massert(cond, msg) if (!(cond)) \
 fprintf(stderr, "Error %d [" __FILE__ ":%d]: %s \n", __LINE__, ++errors, msg);\
 
+#define ns_in_one_second 1000000000
+#define ns_in_one_hour 3600000000000
 
 
 void test_creation_time(uint32_t sec, uint32_t usec, const char *isostr) {
@@ -99,7 +103,7 @@ void test_now() {
 
   usleep(1); // yes, c is that fast.
 
-  struct nanotime now = nanotime_now();
+  struct nanotime now = nanotime_utc_now();
 
   massert(t1.ns < now.ns, "time1 should be less than time2");
   massert(t2.ns < now.ns, "time1 should be less than time2");
@@ -131,11 +135,72 @@ void test_arithmetic() {
 }
 
 
+void test_utc_time(int64_t utc_ns_offset) {
+  fprintf(stdout, "--> testing utc %d -- ns offset: %lld\n",
+    (int)(utc_ns_offset / ns_in_one_hour), (long long) utc_ns_offset);
+
+  struct nanotime now = nanotime_now();
+  struct nanotime utc = nanotime_utc_now();
+
+  struct nanotime local_from_utc = nanotime_local_from_utc(&utc);
+  struct nanotime utc_from_local = nanotime_utc_from_local(&now);
+
+
+  char now_buf[26];
+  char utc_buf[26];
+  nanotime_iso(&now, now_buf, 26);
+  nanotime_iso(&utc, utc_buf, 26);
+
+  fprintf(stdout, "now: %llu %s\n", (long long unsigned)now.ns, now_buf);
+  fprintf(stdout, "utc: %llu %s\n", (long long unsigned)utc.ns, utc_buf);
+
+  massert(nanotime_utc_offset() == utc_ns_offset, "should have correct offset");
+  massert(now.ns - utc_from_local.ns == utc_ns_offset, "should eq utc offset");
+  massert(local_from_utc.ns - utc.ns == utc_ns_offset, "should eq utc offset");
+
+  massert(nanotime_local_from_utc(&utc_from_local).ns == now.ns, "reverting 1");
+  massert(nanotime_utc_from_local(&local_from_utc).ns == utc.ns, "reverting 2");
+
+}
+
+uint64_t current_utc_ns_offset() {
+  time_t secs = (time_t)time(NULL);
+  struct tm tm_;
+  localtime_r(&secs, &tm_);
+  return tm_.tm_gmtoff * ns_in_one_second;
+}
+
+void test_utc() {
+  fprintf(stdout, "%s %s \n", kINDENT, __PRETTY_FUNCTION__);
+
+  int64_t utc_ns_offset = current_utc_ns_offset();
+
+  test_utc_time(utc_ns_offset);
+
+  nanotime_utc_offset_is(utc_ns_offset);
+  test_utc_time(utc_ns_offset);
+
+  nanotime_utc_offset_is(0);
+  test_utc_time(0);
+
+  nanotime_utc_offset_is(-7 * ns_in_one_hour);
+  test_utc_time(-7 * ns_in_one_hour);
+
+  nanotime_utc_offset_is(12 * ns_in_one_hour);
+  test_utc_time(12 * ns_in_one_hour);
+
+  nanotime_utc_offset_is(-11 * ns_in_one_hour);
+  test_utc_time(-11 * ns_in_one_hour);
+
+}
+
+
 int main(int argc, char **argv) {
 
   test_creation();
   test_now();
   test_arithmetic();
+  test_utc();
 
   printf("\n Finished (%d errors).\n", errors);
 
