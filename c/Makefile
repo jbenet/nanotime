@@ -1,8 +1,15 @@
 
 
 CC        = gcc
-CFLAGS    = -Wall -O2 -std=c99
+CFLAGS    = -Wall -O2 -std=gnu99
+LDFLAGS   =
 INCFLAGS  = -I./src
+
+UNAME     = $(shell uname -s)
+
+ifneq ($(UNAME), Darwin)
+LDFLAGS   := $(LDFLAGS) -lrt -lc
+endif
 
 
 SRCS      = src/nanotime.c
@@ -20,10 +27,10 @@ clean:
 
 check: test
 
-test: $(RUN_TESTS)
+test: build $(RUN_TESTS)
 
-test_%: build test/test_%.c
-	$(CC) $(CFLAGS) -o build/$@ $^ $(SRCS) $(INCFLAGS)
+test_%: test/test_%.c
+	$(CC) $(CFLAGS) -o build/$@ $^ $(SRCS) $(INCFLAGS) $(LDFLAGS)
 
 run_% : %
 	@echo '==============> running $<'
