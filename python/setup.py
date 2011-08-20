@@ -14,7 +14,7 @@ setup(
   author_email="jbenet@cs.stanford.com",
   url="http://github.com/jbenet/nanotime/tree/master/python",
   keywords=["nanotime", "nanosecond", "time precision", "64bit time"],
-  packages=["nanotime"],
+  modules=["nanotime"],
   install_requires=[],
   license="MIT License"
 )
