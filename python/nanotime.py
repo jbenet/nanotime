@@ -1,5 +1,7 @@
 import time
 import datetime as datetime_module
+import calendar
+
 
 __author__ = 'jbenet@cs.stanford.edu'
 __version__ = '0.5.1'
@@ -144,7 +146,9 @@ class _converter(object):
 
   @classmethod
   def datetime(cls, d):
-    nt = cls.microseconds(time.mktime(d.timetuple())*1e6 + d.microsecond)
+    du = d if d.utcoffset() is None else d - d.utcoffset()
+    us = int(calendar.timegm(du.timetuple()) * 1000000 + du.microsecond)
+    nt = cls.microseconds(us)
     nt._datetime = d
     return nt
 
