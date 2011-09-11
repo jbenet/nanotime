@@ -99,7 +99,7 @@ void test_now() {
 
   massert(nt1.ns <  nt2.ns, "time1 should be smaller than time2");
   massert(nt1.ns != nt2.ns, "time1 should not be equal to time2");
-  massert(nt2.ns >  nt1.ns, "time1 should be greater than time2");
+  massert(nt2.ns >  nt1.ns, "time2 should be greater than time1");
 
 }
 
