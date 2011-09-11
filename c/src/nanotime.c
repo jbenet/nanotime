@@ -137,7 +137,7 @@ int64_t host_utc_sec_offset() {
   time_t secs = (time_t)time(NULL);
   struct tm tm_;
   localtime_r(&secs, &tm_);
-  return tm_.tm_gmtoff;
+  return (int64_t)tm_.tm_gmtoff;
 }
 
 int64_t nanotime_utc_offset() {
