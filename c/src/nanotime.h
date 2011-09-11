@@ -45,9 +45,11 @@ int64_t nanotime_utc_offset();
 int64_t host_utc_sec_offset();
 
 
-/* fill buffer `buf` with up to `len` chars of the iso representation of `nt` */
-/* returns how many chars were printed into the buffer.                       */
-/* may be less than `len` for cases where nanoseconds couldn't fit            */
+/* fill buffer `buf` with up to `len` chars of the iso representation of `nt`*/
+/* including a null terminating byte. This function behaves like snprintf.   */
+/* e.g.: "2011-09-11 05:50:50.576621"  would need a buffer of size 27        */
+/* returns how many chars were printed (not including the trailing '\0')     */
+/* may be less than `len` for cases where nanoseconds couldn't fit           */
 size_t nanotime_iso(const struct nanotime *nt, char *buf, const size_t len);
 
 

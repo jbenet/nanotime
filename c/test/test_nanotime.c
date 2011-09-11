@@ -49,18 +49,20 @@ void test_creation_time(uint32_t sec, uint32_t usec, const char *isostr) {
   massert(t1.ns == t5.ns, "times should be equal. ");
   massert(t1.ns == t6.ns, "times should be equal. ");
 
-  char buf[26];
-  massert(nanotime_iso(&t1, buf, 26) == 26, "length");
+  size_t length = strlen(isostr);
+  char buf[length + 1];
+  printf("%s == %s len:%d\n", isostr, buf, (int)nanotime_iso(&t1, buf, length + 1));
+  massert(nanotime_iso(&t1, buf, length + 1) == length, "length");
   massert(strcmp(buf, isostr) == 0, "should be eq");
   // massert(nanotime_iso(&t2, buf, 32) == 32, "length");
   // massert(strcmp(buf, isostr) == 0, "should be eq");
-  massert(nanotime_iso(&t3, buf, 26) == 26, "length");
+  massert(nanotime_iso(&t3, buf, length + 1) == length, "length");
   massert(strcmp(buf, isostr) == 0, "should be eq");
-  massert(nanotime_iso(&t4, buf, 26) == 26, "length");
+  massert(nanotime_iso(&t4, buf, length + 1) == length, "length");
   massert(strcmp(buf, isostr) == 0, "should be eq");
-  massert(nanotime_iso(&t5, buf, 26) == 26, "length");
+  massert(nanotime_iso(&t5, buf, length + 1) == length, "length");
   massert(strcmp(buf, isostr) == 0, "should be eq");
-  massert(nanotime_iso(&t6, buf, 26) == 26, "length");
+  massert(nanotime_iso(&t6, buf, length + 1) == length, "length");
   massert(strcmp(buf, isostr) == 0, "should be eq");
 
   uint32_t usec_uint = (uint32_t)useci;
@@ -146,10 +148,10 @@ void test_utc_time(int64_t utc_ns_offset) {
   struct nanotime utc_from_local = nanotime_utc_from_local(&now);
 
 
-  char now_buf[26];
-  char utc_buf[26];
-  nanotime_iso(&now, now_buf, 26);
-  nanotime_iso(&utc, utc_buf, 26);
+  char now_buf[27];
+  char utc_buf[27];
+  nanotime_iso(&now, now_buf, 27);
+  nanotime_iso(&utc, utc_buf, 27);
 
   fprintf(stdout, "now: %llu %s\n", (long long unsigned)now.ns, now_buf);
   fprintf(stdout, "utc: %llu %s\n", (long long unsigned)utc.ns, utc_buf);
