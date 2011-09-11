@@ -12,7 +12,7 @@ static const int float_tolerance = 1000;
 
 #define DOT printf(".")
 #define massert(cond, msg) if (!(cond)) \
-fprintf(stderr, "Error %d [" __FILE__ ":%d]: %s \n", __LINE__, ++errors, msg);\
+fprintf(stderr, "Error %d [" __FILE__ ":%d]: %s \n", ++errors, __LINE__, msg);\
 
 
 bool fct_close(uint64_t ns1, uint64_t ns2) {

@@ -11,7 +11,7 @@ static int errors = 0;
 
 #define DOT printf(".")
 #define massert(cond, msg) if (!(cond)) \
-fprintf(stderr, "Error %d [" __FILE__ ":%d]: %s \n", __LINE__, ++errors, msg);\
+fprintf(stderr, "Error %d [" __FILE__ ":%d]: %s \n", ++errors, __LINE__, msg);\
 
 #define ns_in_one_second 1000000000
 #define ns_in_one_hour 3600000000000
