@@ -95,7 +95,7 @@ void test_now() {
 
   usleep(1); // yes, code is that fast.
 
-  nanotime nt2 = nanotime_now();
+  nanotime nt2 = nanotime_utc_now();
 
   massert(nt1.ns <  nt2.ns, "time1 should be smaller than time2");
   massert(nt1.ns != nt2.ns, "time1 should not be equal to time2");
