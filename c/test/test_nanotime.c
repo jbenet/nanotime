@@ -138,8 +138,9 @@ void test_arithmetic() {
 
 
 void test_utc_time(int64_t utc_ns_offset) {
-  fprintf(stdout, "--> testing utc %d -- ns offset: %lld\n",
-    (int)(utc_ns_offset / ns_in_one_hour), (long long) utc_ns_offset);
+  fprintf(stdout, "--> testing utc %d -- ns offset: %lld, %lld\n",
+    (int)(utc_ns_offset / ns_in_one_hour), (long long) utc_ns_offset,
+    (long long) nanotime_utc_offset());
 
   struct nanotime now = nanotime_now();
   struct nanotime utc = nanotime_utc_now();
