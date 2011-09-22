@@ -4,7 +4,7 @@ import calendar
 
 
 __author__ = 'jbenet@cs.stanford.edu'
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 
 
 __doc__ = '''
@@ -68,7 +68,11 @@ class nanotime(object):
     return self._ns
 
   def __str__(self):
-    return '%s%s' % (self.datetime(), str(self._ns)[-3:])
+    frac = str(self._ns)[-9:]
+    # when microseconds == 000000, datetime doesnt print them.
+    if frac[:6] == '000000':
+      return '%s.%s' % (self.datetime(), frac)
+    return '%s%s' % (self.datetime(), frac[-3:])
 
   def __repr__(self):
     return 'nanotime.nanotime(%d)' % self._ns
